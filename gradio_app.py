@@ -2,20 +2,29 @@ import gradio as gr
 import openai
 import requests
 from bs4 import BeautifulSoup
+import time
+import os
 
 # Set up OpenAI API key
-openai.api_key = "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"
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+# openai.api_key = "sk-api-key"
 
 # Function to generate domain name suggestions using ChatGPT
 def generate_domain_suggestions(keyword, description, number=10):
     # Call OpenAI API to generate domain name suggestions
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=f"Generate {number} domain name suggestions containing the keyword '{keyword}'. This domain will be used for a product that: {description}. Show each domain in one line. Domain sugestions must be creative and different from others. Never suggest domains that diffent only in extension part.",
-        max_tokens=1024,
-        stop=None,
-        temperature=0.5
-    )
+    success = False
+    while not success:
+        try:
+            response = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=f"Generate {number} domain name suggestions containing the keyword '{keyword}'. This domain will be used for a product that: {description}. Show each domain in one line. Domain sugestions must be creative and different from others. Never suggest domains that diffent only in extension part.",
+                max_tokens=500,
+                temperature=0.1
+            )
+            success = True
+        except:
+            time.sleep(1)
+
     domain_suggestions = response.choices[0].text.strip().split("\n")
     return domain_suggestions
 

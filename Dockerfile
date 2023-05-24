@@ -10,9 +10,6 @@ COPY . .
 # Cài đặt các dependencies từ requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port 8000 của Django
-EXPOSE 8000
-
 # Chạy lệnh khởi động Django server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "gradio_app.py"]
 
